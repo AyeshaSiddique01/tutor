@@ -1,0 +1,7 @@
+# E-commerce
+{{ ECOMMERCE_HOST }}{$default_site_port} {
+    request_body {
+        max_size 10MB
+    }
+    import proxy "ecommerce:8000"
+}

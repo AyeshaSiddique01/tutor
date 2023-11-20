@@ -1,0 +1,66 @@
+# Dynamic config API settings
+# https://openedx.github.io/frontend-platform/module-Config.html
+MFE_CONFIG = {
+    "BASE_URL": "{{ MFE_HOST }}",
+    "CSRF_TOKEN_API_PATH": "/csrf/api/v1/token",
+    "CREDENTIALS_BASE_URL": "",
+    "DISCOVERY_API_BASE_URL": "{% if DISCOVERY_HOST is defined %}http://{{ DISCOVERY_HOST }}:8381{% endif %}",
+    "FAVICON_URL": "http://{{ LMS_HOST }}/favicon.ico",
+    "INFO_EMAIL": "{{ CONTACT_EMAIL }}",
+    "LANGUAGE_PREFERENCE_COOKIE_NAME": "openedx-language-preference",
+    "LMS_BASE_URL": "http://{{ LMS_HOST }}:8000",
+    "LOGIN_URL": "http://{{ LMS_HOST }}:8000/login",
+    "LOGO_URL": "http://{{ LMS_HOST }}:8000/theming/asset/images/logo.png",
+    "LOGO_WHITE_URL": "http://{{ LMS_HOST }}:8000/theming/asset/images/logo.png",
+    "LOGO_TRADEMARK_URL": "http://{{ LMS_HOST }}:8000/theming/asset/images/logo.png",
+    "LOGOUT_URL": "http://{{ LMS_HOST }}:8000/logout",
+    "MARKETING_SITE_BASE_URL": "http://{{ LMS_HOST }}:8000",
+    "PASSWORD_RESET_SUPPORT_LINK": "mailto:{{ CONTACT_EMAIL }}",
+    "REFRESH_ACCESS_TOKEN_ENDPOINT": "http://{{ LMS_HOST }}:8000/login_refresh",
+    "SITE_NAME": "{{ PLATFORM_NAME }}",
+    "STUDIO_BASE_URL": "http://{{ CMS_HOST }}:8001",
+    "USER_INFO_COOKIE_NAME": "user-info",
+    "ACCESS_TOKEN_COOKIE_NAME": "edx-jwt-cookie-header-payload",
+}
+
+# MFE-specific settings
+{% for app_name, app in iter_mfes() %}
+{% if app_name == "authn" %}
+AUTHN_MICROFRONTEND_URL = "http://{{ MFE_HOST }}:{{ app["port"] }}/authn"
+AUTHN_MICROFRONTEND_DOMAIN  = "{{ MFE_HOST }}/authn"
+MFE_CONFIG["DISABLE_ENTERPRISE_LOGIN"] = True
+{% elif app_name == "account" %}
+ACCOUNT_MICROFRONTEND_URL = "http://{{ MFE_HOST }}:{{ app["port"] }}/account"
+MFE_CONFIG["ACCOUNT_SETTINGS_URL"] = ACCOUNT_MICROFRONTEND_URL
+{% elif app_name == "course-authoring" %}
+MFE_CONFIG["ENABLE_NEW_EDITOR_PAGES"] = True
+MFE_CONFIG["ENABLE_PROGRESS_GRAPH_SETTINGS"] = True
+{% elif app_name == "discussions" %}
+DISCUSSIONS_MICROFRONTEND_URL = "http://{{ MFE_HOST }}:{{ app["port"] }}/discussions"
+DISCUSSIONS_MFE_FEEDBACK_URL = None
+{% elif app_name == "gradebook" %}
+WRITABLE_GRADEBOOK_URL = "http://{{ MFE_HOST }}:{{ app["port"] }}/gradebook"
+{% elif app_name == "learning" %}
+LEARNING_MICROFRONTEND_URL = "http://{{ MFE_HOST }}:{{ app["port"] }}/learning"
+MFE_CONFIG["LEARNING_BASE_URL"] = "http://{{ MFE_HOST }}:{{ app["port"] }}"
+{% elif app_name == "ora-grading" %}
+ORA_GRADING_MICROFRONTEND_URL = "http://{{ MFE_HOST }}:{{ app["port"] }}/ora-grading"
+{% elif app_name == "profile" %}
+PROFILE_MICROFRONTEND_URL = "http://{{ MFE_HOST }}:{{ app["port"] }}/profile/u/"
+MFE_CONFIG["ACCOUNT_PROFILE_URL"] = "http://{{ MFE_HOST }}:{{ app["port"] }}/profile"
+{% elif app_name == "communications" %}
+COMMUNICATIONS_MICROFRONTEND_URL = "http://{{ MFE_HOST }}:{{ app["port"] }}/communications"
+MFE_CONFIG["SCHEDULE_EMAIL_SECTION"] = True
+{% endif %}
+{% endfor %}
+
+# Cors configuration
+{% for app_name, app in iter_mfes() %}
+# {{ app_name }} MFE
+CORS_ORIGIN_WHITELIST.append("http://{{ MFE_HOST }}:{{ app["port"] }}")
+LOGIN_REDIRECT_WHITELIST.append("{{ MFE_HOST }}:{{ app["port"] }}")
+CSRF_TRUSTED_ORIGINS.append("{{ MFE_HOST }}:{{ app["port"] }}")
+{% endfor %}
+
+{{ patch("mfe-lms-common-settings") }}
+{{ patch("mfe-lms-development-settings") }}

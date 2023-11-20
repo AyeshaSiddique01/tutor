@@ -1,0 +1,34 @@
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: discovery
+  labels:
+    app.kubernetes.io/name: discovery
+spec:
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: discovery
+  template:
+    metadata:
+      labels:
+        app.kubernetes.io/name: discovery
+    spec:
+      securityContext:
+        runAsUser: 1000
+        runAsGroup: 1000
+      containers:
+        - name: discovery
+          image: {{ DISCOVERY_DOCKER_IMAGE }}
+          ports:
+            - containerPort: 8000
+          volumeMounts:
+            - mountPath: /openedx/discovery/course_discovery/settings/tutor/production.py
+              name: settings
+              subPath: production.py
+          securityContext:
+            allowPrivilegeEscalation: false
+      volumes:
+        - name: settings
+          configMap:
+            name: discovery-settings

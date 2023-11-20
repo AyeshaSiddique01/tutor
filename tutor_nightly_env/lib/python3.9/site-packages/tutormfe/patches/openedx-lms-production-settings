@@ -1,0 +1,62 @@
+# Dynamic config API settings
+# https://openedx.github.io/frontend-platform/module-Config.html
+MFE_CONFIG = {
+    "BASE_URL": "{{ MFE_HOST }}",
+    "CSRF_TOKEN_API_PATH": "/csrf/api/v1/token",
+    "CREDENTIALS_BASE_URL": "",
+    "DISCOVERY_API_BASE_URL": "{% if DISCOVERY_HOST is defined %}{% if ENABLE_HTTPS %}https{% else %}http{% endif %}://{{ DISCOVERY_HOST }}{% endif %}",
+    "FAVICON_URL": "{% if ENABLE_HTTPS %}https{% else %}http{% endif %}://{{ LMS_HOST }}/favicon.ico",
+    "INFO_EMAIL": "{{ CONTACT_EMAIL }}",
+    "LANGUAGE_PREFERENCE_COOKIE_NAME": "openedx-language-preference",
+    "LMS_BASE_URL": "{% if ENABLE_HTTPS %}https{% else %}http{% endif %}://{{ LMS_HOST }}",
+    "LOGIN_URL": "{% if ENABLE_HTTPS %}https{% else %}http{% endif %}://{{ LMS_HOST }}/login",
+    "LOGO_URL": "{% if ENABLE_HTTPS %}https{% else %}http{% endif %}://{{ LMS_HOST }}/theming/asset/images/logo.png",
+    "LOGO_WHITE_URL": "{% if ENABLE_HTTPS %}https{% else %}http{% endif %}://{{ LMS_HOST }}/theming/asset/images/logo.png",
+    "LOGO_TRADEMARK_URL": "{% if ENABLE_HTTPS %}https{% else %}http{% endif %}://{{ LMS_HOST }}/theming/asset/images/logo.png",
+    "LOGOUT_URL": "{% if ENABLE_HTTPS %}https{% else %}http{% endif %}://{{ LMS_HOST }}/logout",
+    "MARKETING_SITE_BASE_URL": "{% if ENABLE_HTTPS %}https{% else %}http{% endif %}://{{ LMS_HOST }}",
+    "PASSWORD_RESET_SUPPORT_LINK": "mailto:{{ CONTACT_EMAIL }}",
+    "REFRESH_ACCESS_TOKEN_ENDPOINT": "{% if ENABLE_HTTPS %}https{% else %}http{% endif %}://{{ LMS_HOST }}/login_refresh",
+    "SITE_NAME": "{{ PLATFORM_NAME }}",
+    "STUDIO_BASE_URL": "{{ "https" if ENABLE_HTTPS else "http" }}://{{ CMS_HOST }}",
+    "USER_INFO_COOKIE_NAME": "user-info",
+    "ACCESS_TOKEN_COOKIE_NAME": "edx-jwt-cookie-header-payload",
+}
+
+# MFE-specific settings
+{% for app_name, app in iter_mfes() %}
+{% if app_name == "authn" %}
+AUTHN_MICROFRONTEND_URL = "{% if ENABLE_HTTPS %}https://{% else %}http://{% endif %}{{ MFE_HOST }}/authn"
+AUTHN_MICROFRONTEND_DOMAIN  = "{{ MFE_HOST }}/authn"
+MFE_CONFIG["DISABLE_ENTERPRISE_LOGIN"] = True
+{% elif app_name == "account" %}
+ACCOUNT_MICROFRONTEND_URL = "{% if ENABLE_HTTPS %}https://{% else %}http://{% endif %}{{ MFE_HOST }}/account"
+MFE_CONFIG["ACCOUNT_SETTINGS_URL"] = ACCOUNT_MICROFRONTEND_URL
+{% elif app_name == "course-authoring" %}
+MFE_CONFIG["ENABLE_NEW_EDITOR_PAGES"] = True
+MFE_CONFIG["ENABLE_PROGRESS_GRAPH_SETTINGS"] = True
+{% elif app_name == "discussions" %}
+DISCUSSIONS_MICROFRONTEND_URL = "{% if ENABLE_HTTPS %}https://{% else %}http://{% endif %}{{ MFE_HOST }}/discussions"
+DISCUSSIONS_MFE_FEEDBACK_URL = None
+{% elif app_name == "gradebook" %}
+WRITABLE_GRADEBOOK_URL = "{% if ENABLE_HTTPS %}https://{% else %}http://{% endif %}{{ MFE_HOST }}/gradebook"
+{% elif app_name == "learning" %}
+LEARNING_MICROFRONTEND_URL = "{% if ENABLE_HTTPS %}https://{% else %}http://{% endif %}{{ MFE_HOST }}/learning"
+MFE_CONFIG["LEARNING_BASE_URL"] = "{{ "https" if ENABLE_HTTPS else "http" }}://{{ MFE_HOST }}/learning"
+{% elif app_name == "ora-grading" %}
+ORA_GRADING_MICROFRONTEND_URL = "{% if ENABLE_HTTPS %}https://{% else %}http://{% endif %}{{ MFE_HOST }}/ora-grading"
+{% elif app_name == "profile" %}
+PROFILE_MICROFRONTEND_URL = "{% if ENABLE_HTTPS %}https://{% else %}http://{% endif %}{{ MFE_HOST }}/profile/u/"
+MFE_CONFIG["ACCOUNT_PROFILE_URL"] = "{% if ENABLE_HTTPS %}https://{% else %}http://{% endif %}{{ MFE_HOST }}/profile"
+{% elif app_name == "communications" %}
+COMMUNICATIONS_MICROFRONTEND_URL = "{% if ENABLE_HTTPS %}https://{% else %}http://{% endif %}{{ MFE_HOST }}/communications"
+MFE_CONFIG["SCHEDULE_EMAIL_SECTION"] = True
+{% endif %}
+{% endfor %}
+
+LOGIN_REDIRECT_WHITELIST.append("{{ MFE_HOST }}")
+CORS_ORIGIN_WHITELIST.append("{% if ENABLE_HTTPS %}https://{% else %}http://{% endif %}{{ MFE_HOST }}")
+CSRF_TRUSTED_ORIGINS.append("{{ MFE_HOST }}")
+
+{{ patch("mfe-lms-common-settings") }}
+{{ patch("mfe-lms-production-settings") }}
