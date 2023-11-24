@@ -238,3 +238,18 @@ hooks.Filters.ENV_PATCHES.add_item(
         "FEATURES['ALLOW_PUBLIC_ACCOUNT_CREATION'] = False"
     )
 )
+# Theme templates
+hooks.Filters.ENV_TEMPLATE_ROOTS.add_item(
+    pkg_resources.resource_filename("tutormyplugin", "templates")
+)
+# This is where the theme is rendered in the openedx build directory
+hooks.Filters.ENV_TEMPLATE_TARGETS.add_items(
+    [
+        ("custome_theme", "build/openedx/themes"),
+    ],
+)
+
+# Force the rendering of scss files, even though they are included in a "partials" directory
+hooks.Filters.ENV_PATTERNS_INCLUDE.add_item(
+    r"custome_theme/lms/static/sass/partials/lms/theme/"
+)
