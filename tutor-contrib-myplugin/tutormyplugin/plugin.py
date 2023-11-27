@@ -240,37 +240,59 @@ hooks.Filters.ENV_TEMPLATE_ROOTS.add_item(
     pkg_resources.resource_filename("tutormyplugin", "templates")
 )
 
+# hooks.Filters.ENV_PATCHES.add_item(
+#     (
+#         "openedx-lms-development-settings",
+#         """
+# MFE_CONFIG["LOGO_URL"] = "https://mma.prnewswire.com/media/1730121/edly.jpg"
+# MFE_CONFIG["LOGO_TRADEMARK_URL"] = "https://mma.prnewswire.com/media/1730121/edly.jpg"
+# MFE_CONFIG["LOGO_WHITE_URL"] = "https://mma.prnewswire.com/media/1730121/edly.jpg"
+# MFE_CONFIG["FAVICON_URL"] = "https://mma.prnewswire.com/media/1730121/edly.jpg"
+# """
+#     ),
+# )
+
+# hooks.Filters.ENV_PATCHES.add_item(
+#     (
+#         "openedx-lms-development-settings",
+#         """
+# LOGO_URL = "https://mma.prnewswire.com/media/1730121/edly.jpg"
+# LOGO_TRADEMARK_URL = "https://mma.prnewswire.com/media/1730121/edly.jpg"
+# LOGO_WHITE_URL = "https://mma.prnewswire.com/media/1730121/edly.jpg"
+# FAVICON_URL = "https://mma.prnewswire.com/media/1730121/edly.jpg"
+# """
+#     ),
+# )
+
+# hooks.Filters.ENV_PATCHES.add_item(
+#     (
+#         "openedx-cms-development-settings",
+#         """
+# LOGO_URL = "https://mma.prnewswire.com/media/1730121/edly.jpg"
+# LOGO_TRADEMARK_URL = "https://mma.prnewswire.com/media/1730121/edly.jpg"
+# LOGO_WHITE_URL = "https://mma.prnewswire.com/media/1730121/edly.jpg"
+# FAVICON_URL = "https://mma.prnewswire.com/media/1730121/edly.jpg"
+# """
+#     ),
+# )
+
 hooks.Filters.ENV_PATCHES.add_item(
     (
         "openedx-lms-development-settings",
-        """
-MFE_CONFIG["LOGO_URL"] = "https://mma.prnewswire.com/media/1730121/edly.jpg"
-MFE_CONFIG["LOGO_TRADEMARK_URL"] = "https://mma.prnewswire.com/media/1730121/edly.jpg"
-MFE_CONFIG["LOGO_WHITE_URL"] = "https://mma.prnewswire.com/media/1730121/edly.jpg"
-MFE_CONFIG["FAVICON_URL"] = "https://mma.prnewswire.com/media/1730121/edly.jpg"
-"""
+        "MFE_CONFIG['LOGO_URL'] = 'https://cdn.pixabay.com/photo/2015/03/10/17/23/youtube-667451_960_720.png'",
     ),
 )
+
 hooks.Filters.ENV_PATCHES.add_item(
     (
         "openedx-lms-development-settings",
-        """
-LOGO_URL = "https://mma.prnewswire.com/media/1730121/edly.jpg"
-LOGO_TRADEMARK_URL = "https://mma.prnewswire.com/media/1730121/edly.jpg"
-LOGO_WHITE_URL = "https://mma.prnewswire.com/media/1730121/edly.jpg"
-FAVICON_URL = "https://mma.prnewswire.com/media/1730121/edly.jpg"
-"""
+        "LOGO_URL = 'https://cdn.pixabay.com/photo/2015/03/10/17/23/youtube-667451_960_720.png'",
     ),
 )
 
 hooks.Filters.ENV_PATCHES.add_item(
     (
         "openedx-cms-development-settings",
-        """
-LOGO_URL = "https://mma.prnewswire.com/media/1730121/edly.jpg"
-LOGO_TRADEMARK_URL = "https://mma.prnewswire.com/media/1730121/edly.jpg"
-LOGO_WHITE_URL = "https://mma.prnewswire.com/media/1730121/edly.jpg"
-FAVICON_URL = "https://mma.prnewswire.com/media/1730121/edly.jpg"
-"""
+        "LOGO_URL = 'https://cdn.pixabay.com/photo/2015/03/10/17/23/youtube-667451_960_720.png'",
     ),
 )
