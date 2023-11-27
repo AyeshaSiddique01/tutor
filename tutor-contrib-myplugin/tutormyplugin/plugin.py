@@ -30,7 +30,7 @@ hooks.Filters.CONFIG_UNIQUE.add_items(
         # Each new setting is a pair: (setting_name, unique_generated_value).
         # Prefix your setting names with 'MYPLUGIN_'.
         # For example:
-        ### ("MYPLUGIN_SECRET_KEY", "{{ 24|random_string }}"),
+        # ("MYPLUGIN_SECRET_KEY", "{{ 24|random_string }}"),
     ]
 )
 
@@ -39,7 +39,7 @@ hooks.Filters.CONFIG_OVERRIDES.add_items(
         # Danger zone!
         # Add values to override settings from Tutor core or other plugins here.
         # Each override is a pair: (setting_name, new_value). For example:
-        ### ("PLATFORM_NAME", "My platform"),
+        # ("PLATFORM_NAME", "My platform"),
     ]
 )
 
@@ -56,7 +56,7 @@ MY_INIT_TASKS: list[tuple[str, tuple[str, ...]]] = [
     # For example, to add LMS initialization steps, you could add the script template at:
     # tutormyplugin/templates/myplugin/tasks/lms/init.sh
     # And then add the line:
-    ### ("lms", ("myplugin", "tasks", "lms", "init.sh")),
+    # ("lms", ("myplugin", "tasks", "lms", "init.sh")),
 ]
 
 
@@ -85,12 +85,12 @@ hooks.Filters.IMAGES_BUILD.add_items(
         # To build `myimage` with `tutor images build myimage`,
         # you would add a Dockerfile to templates/myplugin/build/myimage,
         # and then write:
-        ### (
-        ###     "myimage",
-        ###     ("plugins", "myplugin", "build", "myimage"),
-        ###     "docker.io/myimage:{{ MYPLUGIN_VERSION }}",
-        ###     (),
-        ### ),
+        # (
+        # "myimage",
+        # ("plugins", "myplugin", "build", "myimage"),
+        # "docker.io/myimage:{{ MYPLUGIN_VERSION }}",
+        # (),
+        # ),
     ]
 )
 
@@ -101,10 +101,10 @@ hooks.Filters.IMAGES_BUILD.add_items(
 hooks.Filters.IMAGES_PULL.add_items(
     [
         # To pull `myimage` with `tutor images pull myimage`, you would write:
-        ### (
-        ###     "myimage",
-        ###     "docker.io/myimage:{{ MYPLUGIN_VERSION }}",
-        ### ),
+        # (
+        # "myimage",
+        # "docker.io/myimage:{{ MYPLUGIN_VERSION }}",
+        # ),
     ]
 )
 
@@ -115,10 +115,10 @@ hooks.Filters.IMAGES_PULL.add_items(
 hooks.Filters.IMAGES_PUSH.add_items(
     [
         # To push `myimage` with `tutor images push myimage`, you would write:
-        ### (
-        ###     "myimage",
-        ###     "docker.io/myimage:{{ MYPLUGIN_VERSION }}",
-        ### ),
+        # (
+        # "myimage",
+        # "docker.io/myimage:{{ MYPLUGIN_VERSION }}",
+        # ),
     ]
 )
 
@@ -179,20 +179,20 @@ for path in glob(
 # To add a custom job, define a Click command that returns a list of tasks,
 # where each task is a pair in the form ("<service>", "<shell_command>").
 # For example:
-### @click.command()
-### @click.option("-n", "--name", default="plugin developer")
-### def say_hi(name: str) -> list[tuple[str, str]]:
-###     """
-###     An example job that just prints 'hello' from within both LMS and CMS.
-###     """
-###     return [
-###         ("lms", f"echo 'Hello from LMS, {name}!'"),
-###         ("cms", f"echo 'Hello from CMS, {name}!'"),
-###     ]
+# @click.command()
+# @click.option("-n", "--name", default="plugin developer")
+# def say_hi(name: str) -> list[tuple[str, str]]:
+# """
+# An example job that just prints 'hello' from within both LMS and CMS.
+# """
+# return [
+# ("lms", f"echo 'Hello from LMS, {name}!'"),
+# ("cms", f"echo 'Hello from CMS, {name}!'"),
+# ]
 
 
 # Then, add the command function to CLI_DO_COMMANDS:
-## hooks.Filters.CLI_DO_COMMANDS.add_item(say_hi)
+# hooks.Filters.CLI_DO_COMMANDS.add_item(say_hi)
 
 # Now, you can run your job like this:
 #   $ tutor local do say-hi --name="Ayesha Siddique"
@@ -210,46 +210,67 @@ for path in glob(
 # group and then add it to CLI_COMMANDS:
 
 
-### @click.group()
-### def myplugin() -> None:
-###     pass
+# @click.group()
+# def myplugin() -> None:
+# pass
 
 
-### hooks.Filters.CLI_COMMANDS.add_item(myplugin)
+# hooks.Filters.CLI_COMMANDS.add_item(myplugin)
 
 
 # Then, you would add subcommands directly to the Click group, for example:
 
 
-### @myplugin.command()
-### def example_command() -> None:
-###     """
-###     This is helptext for an example command.
-###     """
-###     print("You've run an example command.")
+# @myplugin.command()
+# def example_command() -> None:
+# """
+# This is helptext for an example command.
+# """
+# print("You've run an example command.")
 
 
 # This would allow you to run:
 #   $ tutor myplugin example-command
 
 hooks.Filters.ENV_PATCHES.add_item(
-    (
-        "openedx-lms-common-settings",
-        "FEATURES['ALLOW_PUBLIC_ACCOUNT_CREATION'] = False"
-    )
+    ("openedx-lms-common-settings", "FEATURES['ALLOW_PUBLIC_ACCOUNT_CREATION'] = False")
 )
 # Theme templates
 hooks.Filters.ENV_TEMPLATE_ROOTS.add_item(
     pkg_resources.resource_filename("tutormyplugin", "templates")
 )
-# This is where the theme is rendered in the openedx build directory
-hooks.Filters.ENV_TEMPLATE_TARGETS.add_items(
-    [
-        ("custome_theme", "build/openedx/themes"),
-    ],
+
+hooks.Filters.ENV_PATCHES.add_item(
+    (
+        "openedx-lms-development-settings",
+        """
+MFE_CONFIG["LOGO_URL"] = "https://mma.prnewswire.com/media/1730121/edly.jpg"
+MFE_CONFIG["LOGO_TRADEMARK_URL"] = "https://mma.prnewswire.com/media/1730121/edly.jpg"
+MFE_CONFIG["LOGO_WHITE_URL"] = "https://mma.prnewswire.com/media/1730121/edly.jpg"
+MFE_CONFIG["FAVICON_URL"] = "https://mma.prnewswire.com/media/1730121/edly.jpg"
+"""
+    ),
+)
+hooks.Filters.ENV_PATCHES.add_item(
+    (
+        "openedx-lms-development-settings",
+        """
+LOGO_URL = "https://mma.prnewswire.com/media/1730121/edly.jpg"
+LOGO_TRADEMARK_URL = "https://mma.prnewswire.com/media/1730121/edly.jpg"
+LOGO_WHITE_URL = "https://mma.prnewswire.com/media/1730121/edly.jpg"
+FAVICON_URL = "https://mma.prnewswire.com/media/1730121/edly.jpg"
+"""
+    ),
 )
 
-# Force the rendering of scss files, even though they are included in a "partials" directory
-hooks.Filters.ENV_PATTERNS_INCLUDE.add_item(
-    r"custome_theme/lms/static/sass/partials/lms/theme/"
+hooks.Filters.ENV_PATCHES.add_item(
+    (
+        "openedx-cms-development-settings",
+        """
+LOGO_URL = "https://mma.prnewswire.com/media/1730121/edly.jpg"
+LOGO_TRADEMARK_URL = "https://mma.prnewswire.com/media/1730121/edly.jpg"
+LOGO_WHITE_URL = "https://mma.prnewswire.com/media/1730121/edly.jpg"
+FAVICON_URL = "https://mma.prnewswire.com/media/1730121/edly.jpg"
+"""
+    ),
 )
