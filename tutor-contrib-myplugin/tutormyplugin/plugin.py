@@ -9,7 +9,7 @@ import pkg_resources
 from tutor import hooks
 
 from .__about__ import __version__
-
+from tutormfe.hooks import MFE_APPS
 ########################################
 # CONFIGURATION
 ########################################
@@ -240,59 +240,69 @@ hooks.Filters.ENV_TEMPLATE_ROOTS.add_item(
     pkg_resources.resource_filename("tutormyplugin", "templates")
 )
 
-# hooks.Filters.ENV_PATCHES.add_item(
-#     (
-#         "openedx-lms-development-settings",
-#         """
-# MFE_CONFIG["LOGO_URL"] = "https://mma.prnewswire.com/media/1730121/edly.jpg"
-# MFE_CONFIG["LOGO_TRADEMARK_URL"] = "https://mma.prnewswire.com/media/1730121/edly.jpg"
-# MFE_CONFIG["LOGO_WHITE_URL"] = "https://mma.prnewswire.com/media/1730121/edly.jpg"
-# MFE_CONFIG["FAVICON_URL"] = "https://mma.prnewswire.com/media/1730121/edly.jpg"
-# """
-#     ),
-# )
-
-# hooks.Filters.ENV_PATCHES.add_item(
-#     (
-#         "openedx-lms-development-settings",
-#         """
-# LOGO_URL = "https://mma.prnewswire.com/media/1730121/edly.jpg"
-# LOGO_TRADEMARK_URL = "https://mma.prnewswire.com/media/1730121/edly.jpg"
-# LOGO_WHITE_URL = "https://mma.prnewswire.com/media/1730121/edly.jpg"
-# FAVICON_URL = "https://mma.prnewswire.com/media/1730121/edly.jpg"
-# """
-#     ),
-# )
-
-# hooks.Filters.ENV_PATCHES.add_item(
-#     (
-#         "openedx-cms-development-settings",
-#         """
-# LOGO_URL = "https://mma.prnewswire.com/media/1730121/edly.jpg"
-# LOGO_TRADEMARK_URL = "https://mma.prnewswire.com/media/1730121/edly.jpg"
-# LOGO_WHITE_URL = "https://mma.prnewswire.com/media/1730121/edly.jpg"
-# FAVICON_URL = "https://mma.prnewswire.com/media/1730121/edly.jpg"
-# """
-#     ),
-# )
-
 hooks.Filters.ENV_PATCHES.add_item(
     (
         "openedx-lms-development-settings",
-        "MFE_CONFIG['LOGO_URL'] = 'https://cdn.pixabay.com/photo/2015/03/10/17/23/youtube-667451_960_720.png'",
+        """
+MFE_CONFIG["LOGO_URL"] = "https://mma.prnewswire.com/media/1730121/edly.jpg"
+MFE_CONFIG["LOGO_TRADEMARK_URL"] = "https://mma.prnewswire.com/media/1730121/edly.jpg"
+MFE_CONFIG["LOGO_WHITE_URL"] = "https://mma.prnewswire.com/media/1730121/edly.jpg"
+MFE_CONFIG["FAVICON_URL"] = "https://mma.prnewswire.com/media/1730121/edly.jpg"
+"""
     ),
 )
 
 hooks.Filters.ENV_PATCHES.add_item(
     (
         "openedx-lms-development-settings",
-        "LOGO_URL = 'https://cdn.pixabay.com/photo/2015/03/10/17/23/youtube-667451_960_720.png'",
+        """
+LOGO_URL = "https://mma.prnewswire.com/media/1730121/edly.jpg"
+LOGO_TRADEMARK_URL = "https://mma.prnewswire.com/media/1730121/edly.jpg"
+LOGO_WHITE_URL = "https://mma.prnewswire.com/media/1730121/edly.jpg"
+FAVICON_URL = "https://mma.prnewswire.com/media/1730121/edly.jpg"
+"""
     ),
 )
 
 hooks.Filters.ENV_PATCHES.add_item(
     (
         "openedx-cms-development-settings",
-        "LOGO_URL = 'https://cdn.pixabay.com/photo/2015/03/10/17/23/youtube-667451_960_720.png'",
+        """
+LOGO_URL = "https://mma.prnewswire.com/media/1730121/edly.jpg"
+LOGO_TRADEMARK_URL = "https://mma.prnewswire.com/media/1730121/edly.jpg"
+LOGO_WHITE_URL = "https://mma.prnewswire.com/media/1730121/edly.jpg"
+FAVICON_URL = "https://mma.prnewswire.com/media/1730121/edly.jpg"
+"""
     ),
 )
+
+# hooks.Filters.ENV_PATCHES.add_item(
+#     (
+#         "openedx-lms-development-settings",
+#         "MFE_CONFIG['LOGO_URL'] = 'https://cdn.pixabay.com/photo/2015/03/10/17/23/youtube-667451_960_720.png'",
+#     ),
+# )
+
+# hooks.Filters.ENV_PATCHES.add_item(
+#     (
+#         "openedx-lms-development-settings",
+#         "LOGO_URL = 'https://cdn.pixabay.com/photo/2015/03/10/17/23/youtube-667451_960_720.png'",
+#     ),
+# )
+
+# hooks.Filters.ENV_PATCHES.add_item(
+#     (
+#         "openedx-cms-development-settings",
+#         "LOGO_URL = 'https://cdn.pixabay.com/photo/2015/03/10/17/23/youtube-667451_960_720.png'",
+#     ),
+# )
+
+@MFE_APPS.add()
+def _add_my_mfe(mfes):
+    mfes["mfe_courses"] = {
+        "repository": "https://github.com/AyeshaSiddique01/mfe",
+        "port": 2003,
+        "version": "main",
+        "refs" : "https://api.github.com/repos/AyeshaSiddique01/mfe/git/refs/heads",
+    }
+    return mfes
