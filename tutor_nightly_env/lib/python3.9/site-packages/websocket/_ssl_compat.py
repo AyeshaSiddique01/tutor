@@ -23,6 +23,7 @@ try:
     from ssl import SSLError
     from ssl import SSLWantReadError
     from ssl import SSLWantWriteError
+
     HAVE_SSL = True
 except ImportError:
     # dummy class of SSLError for environment without ssl support

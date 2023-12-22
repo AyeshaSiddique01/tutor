@@ -232,13 +232,9 @@ for path in glob(
 # This would allow you to run:
 #   $ tutor myplugin example-command
 
-hooks.Filters.ENV_PATCHES.add_item(
-    ("openedx-lms-common-settings", "FEATURES['ALLOW_PUBLIC_ACCOUNT_CREATION'] = False")
-)
-# Theme templates
-hooks.Filters.ENV_TEMPLATE_ROOTS.add_item(
-    pkg_resources.resource_filename("tutormyplugin", "templates")
-)
+# hooks.Filters.ENV_PATCHES.add_item(
+#     ("openedx-lms-common-settings", "FEATURES['ALLOW_PUBLIC_ACCOUNT_CREATION'] = False")
+# )
 
 hooks.Filters.ENV_PATCHES.add_item(
     (
